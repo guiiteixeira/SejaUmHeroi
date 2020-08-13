@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "491305046014",
+    "firebase_url": "https://seja-um-heroi.firebaseio.com",
+    "project_id": "seja-um-heroi",
+    "storage_bucket": "seja-um-heroi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:491305046014:android:c9082753a7cb9d210bbaaf",
+        "android_client_info": {
+          "package_name": "com.example.SejaUmHeroi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "491305046014-ul1161lt1okq31apl7hjogp8aql3hpq7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNLylS93SxYxXMWOsKkg6oTJkaAw3-zKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "491305046014-ul1161lt1okq31apl7hjogp8aql3hpq7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
