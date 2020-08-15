@@ -1,4 +1,6 @@
 import 'package:SejaUmHeroi/models/ong.dart';
+import 'package:SejaUmHeroi/pages/home.dart';
+import 'package:SejaUmHeroi/resources/config.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -21,6 +23,27 @@ class ListLiked extends StatefulWidget {
 
 class _ListLikedState extends State<ListLiked> {
   List<Case> cases = [];
+  Color lprimary;
+  Color lsecondary;
+  double fontP;
+  double fontT;
+  double fontST;
+
+  void initPreferences() async {
+    final vprimary = await Config.instance().getPrimary();
+    final vsecondary = await Config.instance().getSecondary();
+    final vfontP = await Config.instance().getPFont();
+    final vfontT = await Config.instance().getTFont();
+    final vfontST = await Config.instance().getSTFont();
+
+    setState(() {
+      lprimary = vprimary;
+      lsecondary = vsecondary;
+      fontP = vfontP;
+      fontT = vfontT;
+      fontST = vfontST;
+    });
+  }
 
   void likeAction(Case casee) async {
     final result = await Firestore.instance
@@ -126,137 +149,171 @@ class _ListLikedState extends State<ListLiked> {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
 
     getCases();
+    initPreferences();
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: PreferredSize(
-          child: AppBar(
-            title: Center(
-                child: Text(
-              widget.title,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            )),
-          ),
-          preferredSize: Size.fromHeight(50)),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              [
-                Container(
-                    margin: EdgeInsets.only(
-                        left: 16, right: 16, top: 40, bottom: 20),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Casos favoritos",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
-                          color: secondary),
-                    ))
-              ],
-              cases
-                  .map((casee) => Card(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Container(
-                                    width: screenWidth * 0.7,
-                                    margin: EdgeInsets.only(top: 24, left: 20),
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "ONG:",
-                                      style: TextStyle(
-                                          color: secondary,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15),
-                                    )),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton(
-                                      icon: FaIcon(
-                                        getLikeIcon(casee.isLiked()),
-                                        size: 18,
-                                        color: primary,
-                                      ),
-                                      onPressed: () {
-                                        likeAction(casee);
-                                      }),
-                                ),
-                              ],
-                            ),
-                            Container(
-                                margin: EdgeInsets.only(top: 8, left: 20),
-                                alignment: Alignment.centerLeft,
-                                child: Text(casee.ong.name)),
-                            Container(
-                                margin: EdgeInsets.only(top: 24, left: 20),
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Caso:",
-                                  style: TextStyle(
-                                      color: secondary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15),
-                                )),
-                            Container(
-                                margin: EdgeInsets.only(top: 8, left: 20),
-                                alignment: Alignment.centerLeft,
-                                child: Text(casee.title)),
-                            Container(
-                                margin: EdgeInsets.only(top: 24, left: 20),
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Valor:",
-                                  style: TextStyle(
-                                      color: secondary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15),
-                                )),
-                            Container(
-                                margin: EdgeInsets.only(top: 8, left: 20),
-                                alignment: Alignment.centerLeft,
-                                child: Text("R\$ " + casee.value.toString())),
-                            Row(
-                              children: <Widget>[
-                                Container(
-                                  width: screenWidth * 0.66,
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 24),
-                                  child: Text(
-                                    "Ver mais detalhes",
-                                    style: TextStyle(
-                                        color: primary,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15),
-                                  ),
-                                ),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton(
-                                      icon: FaIcon(
-                                        FontAwesomeIcons.arrowRight,
-                                        size: 15,
-                                        color: primary,
-                                      ),
-                                      onPressed: null),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
+    return WillPopScope(
+      child: Scaffold(
+        appBar: PreferredSize(
+            child: AppBar(
+              title: Center(
+                  child: Text(
+                widget.title,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
+              leading: IconButton(
+                  icon: FaIcon(FontAwesomeIcons.arrowLeft),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MyHomePage(
+                                  title: widget.title,
+                                  user: widget.user,
+                                )));
+                  }),
+            ),
+            preferredSize: Size.fromHeight(50)),
+        body: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: [
+                [
+                  Container(
+                      margin: EdgeInsets.only(
+                          left: 16, right: 16, top: 40, bottom: 20),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Casos favoritos",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: fontST,
+                            color: lsecondary),
                       ))
-                  .toList()
-            ].expand((element) => element).toList(),
+                ],
+                cases
+                    .map((casee) => Card(
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                      width: screenWidth * 0.7,
+                                      margin:
+                                          EdgeInsets.only(top: 24, left: 20),
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "ONG:",
+                                        style: TextStyle(
+                                            color: lsecondary,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: fontT),
+                                      )),
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    child: IconButton(
+                                        icon: FaIcon(
+                                          getLikeIcon(casee.isLiked()),
+                                          size: 18,
+                                          color: lprimary,
+                                        ),
+                                        onPressed: () {
+                                          likeAction(casee);
+                                        }),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                  margin: EdgeInsets.only(top: 8, left: 20),
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    casee.ong.name,
+                                    style: TextStyle(fontSize: fontP),
+                                  )),
+                              Container(
+                                  margin: EdgeInsets.only(top: 24, left: 20),
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Caso:",
+                                    style: TextStyle(
+                                        color: lsecondary,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: fontT),
+                                  )),
+                              Container(
+                                  margin: EdgeInsets.only(top: 8, left: 20),
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    casee.title,
+                                    style: TextStyle(fontSize: fontP),
+                                  )),
+                              Container(
+                                  margin: EdgeInsets.only(top: 24, left: 20),
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Valor:",
+                                    style: TextStyle(
+                                        color: lsecondary,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: fontT),
+                                  )),
+                              Container(
+                                  margin: EdgeInsets.only(top: 8, left: 20),
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "R\$ " + casee.value.toString(),
+                                    style: TextStyle(fontSize: fontP),
+                                  )),
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                    width: screenWidth * 0.66,
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 24),
+                                    child: Text(
+                                      "Ver mais detalhes",
+                                      style: TextStyle(
+                                          color: lprimary,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: fontT),
+                                    ),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    child: IconButton(
+                                        icon: FaIcon(
+                                          FontAwesomeIcons.arrowRight,
+                                          size: 15,
+                                          color: lprimary,
+                                        ),
+                                        onPressed: null),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ))
+                    .toList()
+              ].expand((element) => element).toList(),
+            ),
           ),
         ),
       ),
+      onWillPop: () {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    MyHomePage(title: widget.title, user: widget.user)));
+        return new Future(() {
+          return false;
+        });
+      },
     );
   }
 }

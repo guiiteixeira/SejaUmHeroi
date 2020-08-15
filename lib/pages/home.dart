@@ -6,7 +6,9 @@ import 'package:SejaUmHeroi/models/case.dart';
 import 'package:SejaUmHeroi/models/ong.dart';
 import 'package:SejaUmHeroi/pages/listLiked.dart';
 import 'package:SejaUmHeroi/pages/login.dart';
+import 'package:SejaUmHeroi/pages/settings.dart';
 import 'package:SejaUmHeroi/resources/colors.dart';
+import 'package:SejaUmHeroi/resources/config.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Case> cases = [];
+  Color lprimary;
+  Color lsecondary;
+  double fontP;
+  double fontT;
+  double fontST;
 
   void likeAction(Case casee) async {
     final result = await Firestore.instance
@@ -86,8 +93,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void getAllCases() {
     Firestore.instance
         .collection('cases')
-        .getDocuments()
-        .then((casesSnapshot) async {
+        .snapshots()
+        .listen((casesSnapshot) async {
       List<DocumentSnapshot> documentSnapshots = casesSnapshot.documents;
       List<Case> casesAux = [];
       for (final documentCaseSnapshot in documentSnapshots) {
@@ -138,12 +145,29 @@ class _MyHomePageState extends State<MyHomePage> {
     return casesAux;
   }
 
+  void initPreferences() async {
+    final vprimary = await Config.instance().getPrimary();
+    final vsecondary = await Config.instance().getSecondary();
+    final vfontP = await Config.instance().getPFont();
+    final vfontT = await Config.instance().getTFont();
+    final vfontST = await Config.instance().getSTFont();
+
+    setState(() {
+      lprimary = vprimary;
+      lsecondary = vsecondary;
+      fontP = vfontP;
+      fontT = vfontT;
+      fontST = vfontST;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
 
     getAllCases();
+    initPreferences();
   }
 
   @override
@@ -177,8 +201,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           "Bem Vindo!",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 22,
-                              color: secondary),
+                              fontSize: fontST,
+                              color: lsecondary),
                         ),
                       ),
                       Container(
@@ -189,7 +213,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           "Explore os casos abaixo e salve o dia. Total de " +
                               cases.length.toString() +
                               " casos.",
-                          style: TextStyle(color: Colors.grey.shade700),
+                          style: TextStyle(
+                              color: Colors.grey.shade700, fontSize: fontP),
                         ),
                       ),
                     ],
@@ -209,9 +234,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                           child: Text(
                                             "ONG:",
                                             style: TextStyle(
-                                                color: secondary,
+                                                color: lsecondary,
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 15),
+                                                fontSize: fontT),
                                           )),
                                       Container(
                                         alignment: Alignment.centerRight,
@@ -219,7 +244,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             icon: FaIcon(
                                               getLikeIcon(casee.isLiked()),
                                               size: 18,
-                                              color: primary,
+                                              color: lprimary,
                                             ),
                                             onPressed: () {
                                               likeAction(casee);
@@ -230,7 +255,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                   Container(
                                       margin: EdgeInsets.only(top: 8, left: 20),
                                       alignment: Alignment.centerLeft,
-                                      child: Text(casee.ong.name)),
+                                      child: Text(
+                                        casee.ong.name,
+                                        style: TextStyle(fontSize: fontP),
+                                      )),
                                   Container(
                                       margin:
                                           EdgeInsets.only(top: 24, left: 20),
@@ -238,14 +266,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                       child: Text(
                                         "Caso:",
                                         style: TextStyle(
-                                            color: secondary,
+                                            color: lsecondary,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 15),
+                                            fontSize: fontT),
                                       )),
                                   Container(
                                       margin: EdgeInsets.only(top: 8, left: 20),
                                       alignment: Alignment.centerLeft,
-                                      child: Text(casee.title)),
+                                      child: Text(casee.title,
+                                          style: TextStyle(fontSize: fontP))),
                                   Container(
                                       margin:
                                           EdgeInsets.only(top: 24, left: 20),
@@ -253,15 +282,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                       child: Text(
                                         "Valor:",
                                         style: TextStyle(
-                                            color: secondary,
+                                            color: lsecondary,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 15),
+                                            fontSize: fontT),
                                       )),
                                   Container(
                                       margin: EdgeInsets.only(top: 8, left: 20),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                          "R\$ " + casee.value.toString())),
+                                          "R\$ " + casee.value.toString(),
+                                          style: TextStyle(fontSize: fontP))),
                                   Row(
                                     children: <Widget>[
                                       Container(
@@ -271,9 +301,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                         child: Text(
                                           "Ver mais detalhes",
                                           style: TextStyle(
-                                              color: primary,
+                                              color: lprimary,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 15),
+                                              fontSize: fontT),
                                         ),
                                       ),
                                       Container(
@@ -282,7 +312,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             icon: FaIcon(
                                               FontAwesomeIcons.arrowRight,
                                               size: 15,
-                                              color: primary,
+                                              color: lprimary,
                                             ),
                                             onPressed: null),
                                       ),
@@ -337,7 +367,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               color: Colors.white,
                             ),
                             onPressed: () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ListLiked(
@@ -354,7 +384,16 @@ class _MyHomePageState extends State<MyHomePage> {
                               FontAwesomeIcons.wrench,
                               color: Colors.white,
                             ),
-                            onPressed: null)),
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Settings(
+                                      title: widget.title,
+                                      user: widget.user,
+                                    ),
+                                  ));
+                            })),
                   ],
                 ))
           ],
