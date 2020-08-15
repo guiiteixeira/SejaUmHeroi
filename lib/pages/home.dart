@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:SejaUmHeroi/auth/auth.dart';
 import 'package:SejaUmHeroi/models/case.dart';
 import 'package:SejaUmHeroi/models/ong.dart';
+import 'package:SejaUmHeroi/pages/details.dart';
 import 'package:SejaUmHeroi/pages/listLiked.dart';
 import 'package:SejaUmHeroi/pages/login.dart';
 import 'package:SejaUmHeroi/pages/settings.dart';
@@ -292,32 +293,44 @@ class _MyHomePageState extends State<MyHomePage> {
                                       child: Text(
                                           "R\$ " + casee.value.toString(),
                                           style: TextStyle(fontSize: fontP))),
-                                  Row(
-                                    children: <Widget>[
-                                      Container(
-                                        width: screenWidth * 0.66,
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 24),
-                                        child: Text(
-                                          "Ver mais detalhes",
-                                          style: TextStyle(
-                                              color: lprimary,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: fontT),
+                                  InkWell(
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          width: screenWidth * 0.66,
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 24),
+                                          child: Text(
+                                            "Ver mais detalhes",
+                                            style: TextStyle(
+                                                color: lprimary,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontT),
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        alignment: Alignment.centerRight,
-                                        child: IconButton(
-                                            icon: FaIcon(
-                                              FontAwesomeIcons.arrowRight,
-                                              size: 15,
-                                              color: lprimary,
-                                            ),
-                                            onPressed: null),
-                                      ),
-                                    ],
-                                  )
+                                        Container(
+                                          alignment: Alignment.centerRight,
+                                          child: IconButton(
+                                              icon: FaIcon(
+                                                FontAwesomeIcons.arrowRight,
+                                                size: 15,
+                                                color: lprimary,
+                                              ),
+                                              onPressed: null),
+                                        ),
+                                      ],
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Details(
+                                                title: widget.title,
+                                                user: widget.user,
+                                                casee: casee),
+                                          ));
+                                    },
+                                  ),
                                 ],
                               ),
                             ))

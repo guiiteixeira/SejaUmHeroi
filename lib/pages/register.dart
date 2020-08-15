@@ -174,6 +174,7 @@ class _RegisterState extends State<Register> {
                   Container(
                     width: maxWidth,
                     child: TextField(
+                      obscureText: true,
                       controller: senha,
                       decoration: InputDecoration(
                           border: InputBorder.none,
@@ -190,6 +191,7 @@ class _RegisterState extends State<Register> {
                   Container(
                     width: maxWidth,
                     child: TextField(
+                      obscureText: true,
                       controller: confirm,
                       decoration: InputDecoration(
                           border: InputBorder.none,

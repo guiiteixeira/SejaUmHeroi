@@ -1,4 +1,5 @@
 import 'package:SejaUmHeroi/models/ong.dart';
+import 'package:SejaUmHeroi/pages/details.dart';
 import 'package:SejaUmHeroi/pages/home.dart';
 import 'package:SejaUmHeroi/resources/config.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -269,32 +270,44 @@ class _ListLikedState extends State<ListLiked> {
                                     "R\$ " + casee.value.toString(),
                                     style: TextStyle(fontSize: fontP),
                                   )),
-                              Row(
-                                children: <Widget>[
-                                  Container(
-                                    width: screenWidth * 0.66,
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 24),
-                                    child: Text(
-                                      "Ver mais detalhes",
-                                      style: TextStyle(
-                                          color: lprimary,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: fontT),
+                              InkWell(
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      width: screenWidth * 0.66,
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 24),
+                                      child: Text(
+                                        "Ver mais detalhes",
+                                        style: TextStyle(
+                                            color: lprimary,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: fontT),
+                                      ),
                                     ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: IconButton(
-                                        icon: FaIcon(
-                                          FontAwesomeIcons.arrowRight,
-                                          size: 15,
-                                          color: lprimary,
-                                        ),
-                                        onPressed: null),
-                                  ),
-                                ],
-                              )
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: IconButton(
+                                          icon: FaIcon(
+                                            FontAwesomeIcons.arrowRight,
+                                            size: 15,
+                                            color: lprimary,
+                                          ),
+                                          onPressed: () {}),
+                                    ),
+                                  ],
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Details(
+                                            title: widget.title,
+                                            user: widget.user,
+                                            casee: casee),
+                                      ));
+                                },
+                              ),
                             ],
                           ),
                         ))

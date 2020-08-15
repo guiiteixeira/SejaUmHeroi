@@ -108,6 +108,7 @@ class _LoginState extends State<Login> {
                   Container(
                     width: maxWidth,
                     child: TextField(
+                      obscureText: true,
                       controller: senha,
                       decoration: InputDecoration(
                           border: InputBorder.none,
